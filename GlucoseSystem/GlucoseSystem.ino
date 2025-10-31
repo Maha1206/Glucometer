@@ -15,8 +15,8 @@ int j;
 
 // PID controller gains
 float P = 0.09;
-float Deriv = 0.0006;
-float Integer = 0.3;
+float Deriv = 0.3;
+float Integer = 0.0006;
 float addIn;
 float sumG = 0;
 
