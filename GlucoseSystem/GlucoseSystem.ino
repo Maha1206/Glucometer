@@ -14,9 +14,9 @@ int i;
 int j;
 
 // PID controller gains
-float P = 0;
-float Deriv = 0;
-float Integer = 0;
+float P = 0.09;
+float Deriv = 0.0006;
+float Integer = 0.3;
 float addIn;
 float sumG = 0;
 
@@ -25,7 +25,7 @@ float D = 0; //mg
 int mealTime = 0;                 // counts loops for meal
 const int MEAL_LOOPS = 15;        // 15 loops = 15 minutes (simulation)
 float GLUCOSE_PER_LOOP = 1000;    // 1000 mg per loop
-int BOLUS_AMOUNT = 15000; 
+int BOLUS_AMOUNT = 15; 
 
 float G_setpoint = 155;   
 float prevError = 0;
@@ -90,8 +90,6 @@ void setup() {
 void loop() {
 
 // Add meal "input" (3 pts)
-//meal is 15mins long, doesn hv to be 15, we can jsut do for few seconds
-//updtae for each time stamp
 
   if (mealTime < MEAL_LOOPS) {
     D = GLUCOSE_PER_LOOP;  // meal ON for this loop
@@ -116,13 +114,13 @@ void loop() {
   I = I + dI * dt;
 
 // PID control (7 pts)
-  float error = G - G_setpoint;   // current glucose error
-  sumG = sumG + error;            // integral term
-  float dError = error - prevError; // derivative term
-  addIn = P * error + Integer * sumG + Deriv * dError; // PID output
+  float error = G - G_setpoint;   
+  sumG = sumG + error;            
+  float dError = error - prevError; 
+  addIn = P * error + Integer * sumG + Deriv * dError; 
   I += addIn;
-  if (I < 0) I = 0;               // insulin cannot be negative
-  prevError = error;              // update previous error
+  if (I < 0) I = 0;               
+  prevError = error;             
  
   Serial.print(Q);
   Serial.print("\t");
