@@ -22,9 +22,9 @@ float sumG = 0;
 
 //Meal size
 float D = 0; //mg
-int mealTime = 0;                 // counts loops for meal
-const int MEAL_LOOPS = 15;        // 15 loops = 15 minutes (simulation)
-float GLUCOSE_PER_LOOP = 1000;    // 1000 mg per loop
+int mealTime = 0;                 
+const int MEAL_LOOPS = 15;        
+float GLUCOSE_PER_LOOP = 1000;   
 int BOLUS_AMOUNT = 15; 
 
 float G_setpoint = 155;   
@@ -92,10 +92,10 @@ void loop() {
 // Add meal "input" (3 pts)
 
   if (mealTime < MEAL_LOOPS) {
-    D = GLUCOSE_PER_LOOP;  // meal ON for this loop
-    mealTime++;            // next loop
+    D = GLUCOSE_PER_LOOP; 
+    mealTime++;            
   } else {
-    D = 0;                 // meal finished
+    D = 0;                
   }
 // Bolus control (5 pts)
   if (!bolusGiven && mealTime == 1) {  
@@ -109,14 +109,14 @@ void loop() {
   dG = R0 - (E + S * I) * G + kq * Q;
   dI = Imax * ((pow(G, 2)) / (alpha + pow(G, 2))) - ki * I;
   float dt = 1.0;
-  Q = Q + dQ * dt; // dt is eery minute
+  Q = Q + dQ * dt; 
   G = G + dG * dt;
   I = I + dI * dt;
 
 // PID control (7 pts)
   float error = G - G_setpoint;   
-  sumG = sumG + error;            
-  float dError = error - prevError; 
+  sumG = sumG + error * dt;            
+  float dError = (error - prevError)/dt; 
   addIn = P * error + Integer * sumG + Deriv * dError; 
   I += addIn;
   if (I < 0) I = 0;               
